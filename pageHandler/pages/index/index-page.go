@@ -38,6 +38,8 @@ type Page struct {
 	PageTemplateMutex    *sync.Mutex
 	PageTemplate         *template.Template
 	LastModifiedTemplate time.Time
+	CachedMC             *MC
+	CollectedMCExpiry    time.Time
 }
 
 func (p *Page) GetPath() string {
@@ -95,11 +97,25 @@ func (p *Page) GetContents(urlParameters url.Values) (contentType string, conten
 		Parameters:    template.URL(p.getNonThemedCleanQuery(urlParameters)),
 		Online:        true,
 	}
-	theMC, err := theMarshal.NewMC()
-	theMarshal.Queried = theMC
-	if err != nil {
-		theMarshal.Online = false
+	var theMC MC
+	if time.Now().After(p.CollectedMCExpiry) || time.Now().Equal(p.CollectedMCExpiry) {
+		theMC, err = theMarshal.NewMC()
+		if err == nil {
+			p.CachedMC = &theMC
+		} else {
+			theMarshal.Online = false
+			p.CachedMC = nil
+		}
+		p.CollectedMCExpiry = time.Now().Add(theData.MCQueryInterval)
+	} else {
+		if p.CachedMC == nil {
+			theMC = MC{}
+			theMarshal.Online = false
+		} else {
+			theMC = *p.CachedMC
+		}
 	}
+	theMarshal.Queried = theMC
 	theBuffer := &io.BufferedWriter{}
 	err = theTemplate.ExecuteTemplate(theBuffer, templateName, theMarshal)
 	if err != nil {

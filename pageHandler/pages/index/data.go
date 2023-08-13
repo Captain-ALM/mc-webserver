@@ -14,6 +14,7 @@ type DataYaml struct {
 	MCProtocolVersion             int           `yaml:"mcProtocolVersion"`
 	MCClientGUID                  int64         `yaml:"mcClientGUID"`
 	MCTimeout                     time.Duration `yaml:"mcTimeout"`
+	MCQueryInterval               time.Duration `yaml:"mcQueryInterval"`
 	AllowDisplayState             bool          `yaml:"allowDisplayState"`
 	AllowDisplayVersion           bool          `yaml:"allowDisplayVersion"`
 	AllowDisplayActualAddress     bool          `yaml:"allowDisplayActualAddress"`
