@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, nositelinkssearchbox">
+    <title>Go Info</title>
+    <style>
+        .full-heading {
+            margin: auto;
+            width: 80%;
+            border: black 1px solid;
+            text-align: center;
+            background-color: mediumslateblue;
+        }
+        table, th, td {
+            margin: auto;
+            text-align: left;
+            border: black 1px solid;
+            border-collapse: collapse;
+            word-break: break-word;
+            -ms-word-wrap: break-word;
+            word-wrap: break-word;
+        }
+        table, td {
+            background-color: lightgray;
+        }
+        table {
+            width: 80%;
+        }
+        th {
+            background-color: lightsteelblue;
+            width: 25%;
+        }
+        td {
+            width: 75%;
+        }
+    </style>
+</head>
+<body>
+<p>
+<div class="full-heading">
+    <h1>{{ .GoVersion }} - {{ .ProductName }}</h1>
+</div>
+</p>
+<p>
+    {{ if .FullOutput }}
+<div class="full-heading">
+    <b>
+        <a href="?">Less Output</a>
+    </b>
+</div>
+{{ else }}
+<div class="full-heading">
+    <b>
+        <a href="?full">More Output</a>
+    </b>
+</div>
+{{ end }}
+</p>
+<p>
+<table>
+    <tr>
+        <th>Product Name</th>
+        <td>{{ .ProductName }}</td>
+    </tr>
+    <tr>
+        <th>Product Description</th>
+        <td>{{ .ProductDescription }}</td>
+    </tr>
+	<tr>
+        <th>Product License</th>
+        <td>BSD 3-Clause License</td>
+    </tr>
+    <tr>
+        <th>Product Location</th>
+        <td>{{ .ProductLocation }}</td>
+    </tr>
+    <tr>
+        <th>Build Commit</th>
+        <td>#{{ .BuildVersion }}</td>
+    </tr>
+    <tr>
+        <th>Build Date</th>
+        <td>{{ .BuildDate }}</td>
+    </tr>
+    <tr>
+        <th>Working Directory</th>
+        <td>{{ .WorkingDirectory }}</td>
+    </tr>
+    {{ if .FullOutput }}
+    <tr>
+        <th>Process ID</th>
+        <td>{{ .ProcessID }}</td>
+    </tr>
+    <tr>
+        <th>Parent Process ID</th>
+        <td>{{ .ParentProcessID }}</td>
+    </tr>
+    {{ end }}
+</table>
+</p>
+<p>
+<table>
+    <tr>
+        <th>Go Version</th>
+        <td>{{ .GoVersion }}</td>
+    </tr>
+    <tr>
+        <th>Go Toolchain</th>
+        <td>{{ .Compiler }}</td>
+    </tr>
+    <tr>
+        <th>GOROOT</th>
+        <td>{{ .GoRoot }}</td>
+    </tr>
+    <tr>
+        <th>GOMAXPROCS</th>
+        <td>{{ .GoMaxProcs }}</td>
+    </tr>
+    <tr>
+        <th>Go Routine Count</th>
+        <td>{{ .GoRoutineNum }}</td>
+    </tr>
+    <tr>
+        <th>Go c go call Count</th>
+        <td>{{ .GoCGoCallNum }}</td>
+    </tr>
+</table>
+</p>
+<p>
+<table>
+    <tr>
+        <th>Hostname</th>
+        <td>{{ .Hostname }}</td>
+    </tr>
+    <tr>
+        <th>Operating System</th>
+        <td>{{ .GoOS }}</td>
+    </tr>
+    <tr>
+        <th>Architecture</th>
+        <td>{{ .GoArch }}</td>
+    </tr>
+    <tr>
+        <th>Number of Cores</th>
+        <td>{{ .NumCPU }}</td>
+    </tr>
+    <tr>
+        <th>Memory Page Size</th>
+        <td>{{ .PageSize }}</td>
+    </tr>
+</table>
+</p>
+<p>
+<table>
+    <tr>
+        <th>Listen Type</th>
+        <td>{{ .ListenSettings.WebNetwork }}</td>
+    </tr>
+    <tr>
+        <th>Listening Address</th>
+        <td>{{ .ListenSettings.Web }}</td>
+    </tr>
+    <tr>
+        <th>Listening Method</th>
+        <td>{{ .ListenSettings.WebMethod }}</td>
+    </tr>
+    <tr>
+        <th>Identifying</th>
+        <td>{{ .ListenSettings.Identify }}</td>
+    </tr>
+    {{ if and .FullOutput .ListenSettings.Identify }}
+    <tr>
+        <th>Server</th>
+        <td>Clerie Gilbert</td>
+    </tr>
+    <tr>
+        <th>Powered By</th>
+        <td>Love</td>
+    </tr>
+    <tr>
+        <th>Friendly</th>
+        <td>True</td>
+    </tr>
+    {{ end }}
+</table>
+</p>
+<p>
+<table>
+    <tr>
+        <th>Template Storage Path</th>
+        <td>{{ .ServeSettings.GetDataStoragePath }}</td>
+    </tr>
+    <tr>
+        <th>Served Domains</th>
+        <td>{{ .ServeSettings.GetDomainString }}</td>
+    </tr>
+    <tr>
+        <th>Range Supported</th>
+        <td>{{ .ServeSettings.RangeSupported }}</td>
+    </tr>
+</table>
+</p>
+{{ if .FullOutput }}
+<p>
+<table>
+    <tr>
+        <th>Enable Template Caching</th>
+        <td>{{ .ServeSettings.CacheSettings.EnableTemplateCaching }}</td>
+    </tr>
+    <tr>
+        <th>Enable Template Cache Purge</th>
+        <td>{{ .ServeSettings.CacheSettings.EnableTemplateCachePurge }}</td>
+    </tr>
+    <tr>
+        <th>Enable Content Caching</th>
+        <td>{{ .ServeSettings.CacheSettings.EnableContentsCaching }}</td>
+    </tr>
+    <tr>
+        <th>Enable Content Cache Purge</th>
+        <td>{{ .ServeSettings.CacheSettings.EnableContentsCachePurge }}</td>
+    </tr>
+    <tr>
+        <th>Max Age</th>
+        <td>{{ .ServeSettings.CacheSettings.MaxAge }}</td>
+    </tr>
+    <tr>
+        <th>Enable Last Modified Precondition Support</th>
+        <td>{{ .ServeSettings.CacheSettings.NotModifiedResponseUsingLastModified }}</td>
+    </tr>
+    <tr>
+        <th>Enable ETag Precondition Support</th>
+        <td>{{ .ServeSettings.CacheSettings.NotModifiedResponseUsingETags }}</td>
+    </tr>
+</table>
+</p>
+<p>
+<table>
+    <tr>
+        <th>Environment Variables</th>
+    </tr>
+    {{ range .Environment }}
+    <tr>
+        <td>{{ . }}</td>
+    </tr>
+    {{ end }}
+</table>
+</p>
+{{ end }}
+<p>
+<table>
+    <tr>
+        <th>Number of Registered Pages</th>
+        <td>{{ len .RegisteredPages }}</td>
+    </tr>
+</table>
+</p>
+{{ if and .FullOutput (not (eq (len .RegisteredPages) 0)) }}
+<p>
+<table>
+    <tr>
+        <th>Registered Pages</th>
+    </tr>
+    {{ range .RegisteredPages }}
+    <tr>
+        <td>{{ . }}</td>
+    </tr>
+    {{ end }}
+</table>
+</p>
+{{ end }}
+</p>
+<p>
+<table>
+    <tr>
+        <th>Number of Cached Pages</th>
+        <td>{{ len .CachedPages }}</td>
+    </tr>
+</table>
+</p>
+{{ if and .FullOutput (not (eq (len .CachedPages) 0)) }}
+<p>
+<table>
+    <tr>
+        <th>Cached Pages</th>
+    </tr>
+    {{ range .CachedPages }}
+    <tr>
+        <td>{{ . }}</td>
+    </tr>
+    {{ end }}
+</table>
+</p>
+{{ end }}
+</p>
+<p>
+    {{ if .FullOutput }}
+<div class="full-heading">
+    <b>
+        <a href="?">Less Output</a>
+    </b>
+</div>
+{{ else }}
+<div class="full-heading">
+    <b>
+        <a href="?full">More Output</a>
+    </b>
+</div>
+{{ end }}
+</p>
+</body>
+</html>

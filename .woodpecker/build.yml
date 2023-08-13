@@ -1,0 +1,12 @@
+platform: linux/amd64
+
+pipeline:
+  format:
+    image: golang
+    commands:
+      - files=$(gofmt -l .) && echo "$files" && [ -z "$files" ]
+  build:
+    image: golang
+    commands:
+      - make build
+  

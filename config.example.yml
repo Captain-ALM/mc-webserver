@@ -1,0 +1,14 @@
+listen:
+  webNetwork: "tcp4"
+  web: ":8080"
+  webMethod: "http"
+  identify: true
+serve:
+  rangeSupported: true
+  enableGoInfoPage: true
+  cacheSettings:
+    enableContentsCaching: true
+    enableContentsCachePurge: true
+    maxAge: 3600
+    notModifiedUsingLastModified: true
+    notModifiedUsingETags: true

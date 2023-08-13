@@ -1,0 +1,21 @@
+# Environment variables file
+.env
+
+# Distributable directory
+dist/
+
+# Test data and logs folders
+.data/
+.idea/dataSources.xml
+
+# CDN link
+cdn/
+cdn
+cdn_/
+cdn_
+
+# Config Link
+cnf/
+cnf
+cnf_/
+cnf_
