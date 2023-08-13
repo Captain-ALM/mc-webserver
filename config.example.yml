@@ -4,9 +4,13 @@ listen:
   webMethod: "http"
   identify: true
 serve:
+  dataStorage: ""
+  domains: []
   rangeSupported: true
   enableGoInfoPage: true
   cacheSettings:
+    enableTemplateCaching: false
+    enableTemplateCachePurge: false
     enableContentsCaching: true
     enableContentsCachePurge: true
     maxAge: 3600

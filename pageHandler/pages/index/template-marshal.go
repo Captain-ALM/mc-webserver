@@ -7,6 +7,7 @@ import (
 	"github.com/mcstatus-io/mcutil/response"
 	"html/template"
 	"strings"
+	"time"
 )
 
 type Marshal struct {
@@ -15,8 +16,7 @@ type Marshal struct {
 	PlayersShown  bool
 	ModsShown     bool
 	ExtendedShown bool
-	Parameters    template.URL
-	Light         bool
+	Dark          bool
 	Online        bool
 }
 
@@ -39,6 +39,7 @@ func (m Marshal) NewMC() (MC, error) {
 			return MC{}, err
 		}
 		return MC{
+			Timestamp:              time.Now(),
 			Version:                &r.Version.NameClean,
 			ProtocolVersion:        &r.Version.Protocol,
 			Address:                m.Data.MCAddress,
@@ -67,6 +68,7 @@ func (m Marshal) NewMC() (MC, error) {
 			return MC{}, err
 		}
 		return MC{
+			Timestamp:              time.Now(),
 			Version:                &r.Version.NameClean,
 			ProtocolVersion:        &r.Version.Protocol,
 			Address:                m.Data.MCAddress,
@@ -95,6 +97,7 @@ func (m Marshal) NewMC() (MC, error) {
 			return MC{}, err
 		}
 		return MC{
+			Timestamp:              time.Now(),
 			Version:                r.Version,
 			ProtocolVersion:        r.ProtocolVersion,
 			Address:                m.Data.MCAddress,
@@ -199,4 +202,21 @@ func (m Marshal) CollectIPv4Port(port *uint16) uint16 {
 		return m.Data.MCPort
 	}
 	return *port
+}
+
+func (m *Marshal) ToggleQuery(option string) string {
+	toReturn := ""
+	if (!m.Dark && option == "dark") || (m.Dark && option != "dark") {
+		toReturn += "dark&"
+	}
+	if (!m.ModsShown && option == "mods") || (m.ModsShown && option != "mods") {
+		toReturn += "mods&"
+	}
+	if (!m.ExtendedShown && option == "extended") || (m.ExtendedShown && option != "extended") {
+		toReturn += "extended&"
+	}
+	if (!m.PlayersShown && option == "players") || (m.PlayersShown && option != "players") {
+		toReturn += "players"
+	}
+	return strings.TrimRight(toReturn, "&")
 }

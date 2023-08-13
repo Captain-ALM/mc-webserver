@@ -2,9 +2,11 @@ package index
 
 import (
 	"html/template"
+	"time"
 )
 
 type MC struct {
+	Timestamp              time.Time
 	Version                *string
 	ProtocolVersion        *int64
 	Address                string

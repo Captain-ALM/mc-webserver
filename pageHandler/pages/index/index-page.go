@@ -26,6 +26,7 @@ func NewPage(dataStore string, cacheTemplates bool) *Page {
 		DataStore:         dataStore,
 		StoredDataMutex:   sdm,
 		PageTemplateMutex: ptm,
+		CacheMCMutex:      &sync.Mutex{},
 	}
 	return pageToReturn
 }
@@ -40,6 +41,7 @@ type Page struct {
 	LastModifiedTemplate time.Time
 	CachedMC             *MC
 	CollectedMCExpiry    time.Time
+	CacheMCMutex         *sync.Mutex
 }
 
 func (p *Page) GetPath() string {
@@ -55,17 +57,6 @@ func (p *Page) GetLastModified() time.Time {
 }
 
 func (p *Page) GetCacheIDExtension(urlParameters url.Values) string {
-	toReturn := p.getNonThemedCleanQuery(urlParameters)
-	if toReturn != "" {
-		toReturn += "&"
-	}
-	if urlParameters.Has("light") {
-		toReturn += "light"
-	}
-	return strings.TrimRight(toReturn, "&")
-}
-
-func (p *Page) getNonThemedCleanQuery(urlParameters url.Values) string {
 	toReturn := ""
 	if urlParameters.Has("players") {
 		toReturn += "players&"
@@ -74,7 +65,10 @@ func (p *Page) getNonThemedCleanQuery(urlParameters url.Values) string {
 		toReturn += "mods&"
 	}
 	if urlParameters.Has("extended") {
-		toReturn += "extended"
+		toReturn += "extended&"
+	}
+	if urlParameters.Has("dark") {
+		toReturn += "dark"
 	}
 	return strings.TrimRight(toReturn, "&")
 }
@@ -90,14 +84,27 @@ func (p *Page) GetContents(urlParameters url.Values) (contentType string, conten
 	}
 	theMarshal := &Marshal{
 		Data:          *theData,
-		Light:         urlParameters.Has("light"),
+		Dark:          urlParameters.Has("dark"),
 		PlayersShown:  urlParameters.Has("players"),
 		ModsShown:     urlParameters.Has("mods"),
 		ExtendedShown: urlParameters.Has("extended"),
-		Parameters:    template.URL(p.getNonThemedCleanQuery(urlParameters)),
 		Online:        true,
 	}
+
+	theMarshal.Queried = p.GetMC(theData, theMarshal)
+	theBuffer := &io.BufferedWriter{}
+	err = theTemplate.ExecuteTemplate(theBuffer, templateName, theMarshal)
+	if err != nil {
+		return "text/plain", []byte("Cannot Get Page.\r\n" + err.Error()), false
+	}
+	return "text/html", theBuffer.Data, true
+}
+
+func (p *Page) GetMC(theData *DataYaml, theMarshal *Marshal) MC {
 	var theMC MC
+	var err error
+	defer p.CacheMCMutex.Unlock()
+	p.CacheMCMutex.Lock()
 	if time.Now().After(p.CollectedMCExpiry) || time.Now().Equal(p.CollectedMCExpiry) {
 		theMC, err = theMarshal.NewMC()
 		if err == nil {
@@ -115,13 +122,7 @@ func (p *Page) GetContents(urlParameters url.Values) (contentType string, conten
 			theMC = *p.CachedMC
 		}
 	}
-	theMarshal.Queried = theMC
-	theBuffer := &io.BufferedWriter{}
-	err = theTemplate.ExecuteTemplate(theBuffer, templateName, theMarshal)
-	if err != nil {
-		return "text/plain", []byte("Cannot Get Page.\r\n" + err.Error()), false
-	}
-	return "text/html", theBuffer.Data, true
+	return theMC
 }
 
 func (p *Page) PurgeTemplate() {
