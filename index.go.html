@@ -194,13 +194,11 @@
         <td>{{ .Queried.PreviewChatEnforced }}</td>
     </tr>
     {{ end }}
-    {{ end }}
-    {{ end }}
-    {{ if .ExtendedShown }}
     <tr>
         <th>Last Update Time</th>
         <td>{{ .Queried.GetTimestamp }}</td>
     </tr>
+    {{ end }}
     {{ end }}
 </table>
 </p>
