@@ -28,6 +28,7 @@ type DataYaml struct {
 	AllowPreviewChatModeDisplay   bool          `yaml:"allowPreviewChatModeDisplay"`
 	AllowDisplayModded            bool          `yaml:"allowDisplayModded"`
 	AllowModListing               bool          `yaml:"allowModListing"`
+	ShowAnonymousPlayers          bool          `yaml:"showAnonymousPlayers"`
 }
 
 func (dy DataYaml) GetCleanMCType() string {

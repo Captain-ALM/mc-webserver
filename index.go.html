@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Minecraft Server {{ .Data.PageTitle }}">
+    <meta name="keywords" content="Minecraft Server Mine Craft {{ .Data.PageTitle }}">
+    <title>{{ .Data.PageTitle }}</title>
+    <style>
+        body {
+            color: {{ if .Dark }} #f9f9f9 {{ else }} #060606 {{ end }};
+            background-color: {{ if .Dark }} #050506 {{ else }} #fafaf9 {{ end }};
+            border-color: {{ if .Dark }} #696969 {{ else }} #969696 {{ end }};
+        }
+        a {
+            color: {{ if .Dark }} #b0b0f0 {{ else }} #4f4fff {{ end }};
+        }
+        .full-heading {
+            margin: auto;
+            width: 80%;
+            border-style: solid;
+            text-align: center;
+            background-color: {{ if .Dark }} #1d1d1e {{ else }} #e2e2e1 {{ end }};
+        }
+        .full-border {
+            border-width: 1px;
+        }
+        .tm-border {
+            border-width: 1px 1px 0px;
+        }
+        .bm-border {
+            border-width: 0px 1px 1px;
+        }
+        table, th, td {
+            margin: auto;
+            text-align: left;
+            border-style: solid;
+            border-width: 1px;
+            border-collapse: collapse;
+            word-break: break-word;
+            -ms-word-wrap: break-word;
+            word-wrap: break-word;
+        }
+        table, td {
+            background-color: {{ if .Dark }} dimgray {{ else }} lightgray {{ end }};
+        }
+        table {
+            width: 80%;
+        }
+        th {
+            background-color: {{ if .Dark }} #295d8a {{ else }} #b0c4de {{ end }};
+            width: 25%;
+        }
+        td {
+            width: 75%;
+        }
+        .centered {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<p>
+<div class="full-heading full-border">
+    <h1>{{ .Data.PageTitle }}</h1>
+</div>
+</p>
+<p>
+<div class="full-heading tm-border">
+    <b>
+        <a href="{{ .ToggleQuery "dark" }}" title="Toggle Theme.">{{ if .Dark }}Light Mode{{ else }}Dark Mode{{ end }}</a>
+    </b>
+</div>
+<div class="full-heading bm-border">
+    <b>
+        <a href="{{ .ToggleQuery "extended" }}" title="Toggle Extended Information.">{{ if .ExtendedShown }}Hide Extended Information{{ else }}Show Extended Information{{ end }}</a>
+    </b>
+</div>
+</p>
+<p>
+<table>
+    <tr>
+        <th>Server Address</th>
+        <td>{{ if .Online }}{{ .Queried.Address }}{{ else }}{{ .Data.MCAddress }}{{ end }}</td>
+    </tr>
+    <tr>
+        <th>Server Port</th>
+        <td>{{ if .Online }}{{ .Queried.Port }}{{ else }}{{ .Data.MCPort }}{{ end }}</td>
+    </tr>
+    {{ if (and .ExtendedShown .Queried.Port6) }}
+	  <tr>
+        <th>Server IPv6 Port</th>
+        <td>{{ .Queried.Port6 }}</td>
+    </tr>
+    {{ end }}
+    {{ if and .ExtendedShown .Data.AllowDisplayActualAddress }}
+    {{ if .Queried.ActualHost }}
+    <tr>
+        <th>Actual Address</th>
+        <td>{{ .Queried.ActualHost }}</td>
+    </tr>
+    {{ end }}
+    {{ if .Queried.ActualPort }}
+    <tr>
+        <th>Actual Port</th>
+        <td>{{ .Queried.ActualPort }}</td>
+    </tr>
+    {{ end }}
+    {{ end }}
+    {{ if .Data.AllowDisplayState }}
+    <tr>
+        <th>Server State</th>
+        <td>{{ if .Online }}Online{{ else }}Offline{{ end }}</td>
+    </tr>
+    {{ end }}
+    {{ if ne .Data.ServerDescription "" }}
+    <tr>
+        <th>Server Description</th>
+        <td>{{ .Data.ServerDescription }}</td>
+    </tr>
+    {{ end }}
+    {{ if .Online }}
+    {{ if .Data.AllowDisplayVersion }}
+    <tr>
+        <th>Type</th>
+        <td>{{ .Data.GetCleanMCType }}</td>
+    </tr>
+    {{ if .Queried.Edition }}
+    <tr>
+        <th>Edition</th>
+        <td>{{ .Queried.Edition }}</td>
+    </tr>
+    {{ end }}
+    {{ if .Queried.Version }}
+    <tr>
+        <th>Version</th>
+        <td>{{ .Queried.Version }}</td>
+    </tr>
+    {{ end }}
+    {{ if (and .ExtendedShown .Queried.ProtocolVersion) }}
+    <tr>
+        <th>Protocol Version</th>
+        <td>{{ .Queried.ProtocolVersion }}</td>
+    </tr>
+    {{ end }}
+    {{ end }}
+    {{ if and .Data.AllowPlayerCountDisplay (and .Queried.PlayerCount .Queried.MaxPlayers) }}
+    <tr>
+        <th>Player Count</th>
+        <td>{{ if .Data.AllowPlayerListing }}<a href="{{ .ToggleQuery "players" }}" title="Toggle Player List.">{{ end }} {{ .Queried.PlayerCount }} / {{ .Queried.MaxPlayers }} {{ if .Data.AllowPlayerListing }}</a>{{ end }}</td>
+    </tr>
+    {{ end }}
+    {{ if .Data.AllowMOTDDisplay }}
+    {{ if ne .Queried.MOTD "" }}
+    <tr>
+        <th>MOTD</th>
+        <td>{{ .Queried.MOTD }}</td>
+    </tr>
+    {{ end }}
+    {{ end }}
+    {{ if .ExtendedShown }}
+    {{ if and .Data.AllowFaviconDisplay .Queried.Favicon }}
+    <tr>
+        <th>Icon</th>
+        <td class="centered">
+          <img {{ .Queried.GetFaviconSRC }} alt="Icon" title="Icon" width="64" height="64" />
+        </td>
+    </tr>
+    {{ end }}
+    {{ if and .Data.AllowDisplayModded (gt .Queried.ModCount 0) }}
+    <tr>
+        <th>Mod Count</th>
+        <td>{{ if .Data.AllowModListing }}<a href="{{ .ToggleQuery "mods" }}" title="Toggle Mod List.">{{ end }}{{ .Queried.ModCount }}{{ if .Data.AllowModListing }}</a>{{ end }}</td>
+    </tr>
+    {{ end }}
+    {{ if and .Data.AllowSecureProfileModeDisplay .Queried.SecureProfilesEnforced }}
+    <tr>
+        <th>Secure Profiles Enforced</th>
+        <td>{{ .Queried.SecureProfilesEnforced }}</td>
+    </tr>
+    {{ end }}
+    {{ if and .Data.AllowPreviewChatModeDisplay .Queried.PreviewChatEnforced }}
+    <tr>
+        <th>Preview Chat Enforced</th>
+        <td>{{ .Queried.PreviewChatEnforced }}</td>
+    </tr>
+    {{ end }}
+    <tr>
+        <th>Last Update Time</th>
+        <td>{{ .Queried.GetTimestamp }}</td>
+    </tr>
+    {{ end }}
+    {{ end }}
+</table>
+</p>
+{{ if and (and .PlayersShown .Online) (and .Data.AllowPlayerCountDisplay .Data.AllowPlayerListing) }}
+<p>
+<table>
+    <tr>
+        <th>Player List{{ if .Queried.PlayerCount }} ({{ .Queried.PlayerCount }}) {{ end }}</th>
+    </tr>
+    <tr>
+        <td><a href="{{ .ToggleQuery "players" }}" title="Collapse Player List.">Collapse Player List</a></td>
+    </tr>
+    {{ if gt (len (.Queried.GetPlayers .Data.ShowAnonymousPlayers)) 0 }}
+    {{ range .Queried.Players }}
+    <tr>
+        <td>{{ if or .Data.ShowAnonymousPlayers (ne . "Anonymous Player") }}{{ . }}{{ end }}</td>
+    </tr>
+    {{ end }}
+    {{ else }}
+    <tr>
+        <td>No Detectable Players.</td>
+    </tr>
+    {{ end }}
+    <tr>
+        <td><a href="{{ .ToggleQuery "players" }}" title="Collapse Player List.">Collapse Player List</a></td>
+    </tr>
+</table>
+</p>
+{{ end }}
+{{ if and (and .ModsShown .Online) (and .ExtendedShown (and .Data.AllowDisplayModded .Data.AllowModListing)) }}
+<p>
+<table>
+    <tr>
+        <th>Mod List ({{ .Queried.PlayerCount }})</th>
+    </tr>
+    <tr>
+        <td><a href="{{ .ToggleQuery "mods" }}" title="Collapse Mod List.">Collapse Mod List</a></td>
+    </tr>
+    {{ if gt (len .Queried.Mods) 0 }}
+    {{ range .Queried.Mods }}
+    <tr>
+        <td>{{ . }}</td>
+    </tr>
+    {{ end }}
+    {{ else }}
+    <tr>
+        <td>No Detectable Mods.</td>
+    </tr>
+    {{ end }}
+    <tr>
+        <td><a href="{{ .ToggleQuery "mods" }}" title="Collapse Mod List.">Collapse Mod List</a></td>
+    </tr>
+</table>
+</p>
+{{ end }}
+<p>
+<div class="full-heading tm-border">
+    <b>
+        <a href="{{ .ToggleQuery "extended" }}" title="Toggle Extended Information.">{{ if .ExtendedShown }}Hide Extended Information{{ else }}Show Extended Information{{ end }}</a>
+    </b>
+</div>
+<div class="full-heading bm-border">
+    <b>
+        <a href="{{ .ToggleQuery "dark" }}" title="Toggle Theme.">{{ if .Dark }}Light Mode{{ else }}Dark Mode{{ end }}</a>
+    </b>
+</div>
+</p>
+<p>
+<div class="full-heading full-border">
+    <b>{{ .Data.Footer }}</b>
+</div>
+</p>
+</body>
+</html>

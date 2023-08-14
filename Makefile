@@ -34,19 +34,19 @@ clean:
 	rm -r -f dist/
 
 deploy: build
-	sudo systemctl stop wappcityuni
+	sudo systemctl stop ${PRODUCT_NAME}
 	sudo cp "${BIN}" /usr/local/bin
 	sudo cp *.go.html cnf
 	sudo cp *.go.yml cnf
 	sudo cp *.css cdn
 	sudo cp *.js cdn
-	sudo systemctl start wappcityuni
+	sudo systemctl start ${PRODUCT_NAME}
 
 d: build
-	sudo systemctl stop wappcityuni_
+	sudo systemctl stop ${DNAME}
 	sudo cp "${BIN}" "/usr/local/bin/${DNAME}"
 	sudo cp *.go.html cnf_
 	sudo cp *.go.yml cnf_
 	sudo cp *.css cdn_
 	sudo cp *.js cdn_
-	sudo systemctl start wappcityuni_
+	sudo systemctl start ${DNAME}

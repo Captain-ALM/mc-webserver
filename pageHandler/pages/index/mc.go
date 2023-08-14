@@ -34,3 +34,17 @@ func (m MC) GetFaviconSRC() template.HTMLAttr {
 	toReturn += "\""
 	return template.HTMLAttr(toReturn)
 }
+
+func (m MC) GetTimestamp() string {
+	return m.Timestamp.Format(time.RFC822)
+}
+
+func (m MC) GetPlayers(aap bool) []string {
+	toReturn := make([]string, 0)
+	for _, cpl := range m.Players {
+		if aap || cpl != "Anonymous Player" {
+			toReturn = append(toReturn, cpl)
+		}
+	}
+	return toReturn
+}

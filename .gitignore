@@ -19,3 +19,6 @@ cnf/
 cnf
 cnf_/
 cnf_
+
+# Go YAML Page Config -- For This Repo
+*.go.yml
