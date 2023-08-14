@@ -198,10 +198,10 @@
 <p>
 <table>
     <tr>
-        <th>Player List{{ if .Queried.PlayerCount }} ({{ .Queried.PlayerCount }}) {{ end }}</th>
+        <th class="centered">Player List{{ if .Queried.PlayerCount }} ({{ .Queried.PlayerCount }}) {{ end }}</th>
     </tr>
     <tr>
-        <td><a href="{{ .ToggleQuery "players" }}" title="Collapse Player List.">Collapse Player List</a></td>
+        <td class="centered"><a href="{{ .ToggleQuery "players" }}" title="Collapse Player List.">Collapse Player List</a></td>
     </tr>
     {{ if gt (len (.Queried.GetPlayers .Data.ShowAnonymousPlayers)) 0 }}
     {{ range .Queried.Players }}
@@ -215,7 +215,7 @@
     </tr>
     {{ end }}
     <tr>
-        <td><a href="{{ .ToggleQuery "players" }}" title="Collapse Player List.">Collapse Player List</a></td>
+        <td class="centered"><a href="{{ .ToggleQuery "players" }}" title="Collapse Player List.">Collapse Player List</a></td>
     </tr>
 </table>
 </p>
@@ -224,10 +224,10 @@
 <p>
 <table>
     <tr>
-        <th>Mod List ({{ .Queried.PlayerCount }})</th>
+        <th class="centered">Mod List ({{ .Queried.PlayerCount }})</th>
     </tr>
     <tr>
-        <td><a href="{{ .ToggleQuery "mods" }}" title="Collapse Mod List.">Collapse Mod List</a></td>
+        <td class="centered"><a href="{{ .ToggleQuery "mods" }}" title="Collapse Mod List.">Collapse Mod List</a></td>
     </tr>
     {{ if gt (len .Queried.Mods) 0 }}
     {{ range .Queried.Mods }}
@@ -241,7 +241,7 @@
     </tr>
     {{ end }}
     <tr>
-        <td><a href="{{ .ToggleQuery "mods" }}" title="Collapse Mod List.">Collapse Mod List</a></td>
+        <td class="centered"><a href="{{ .ToggleQuery "mods" }}" title="Collapse Mod List.">Collapse Mod List</a></td>
     </tr>
 </table>
 </p>
