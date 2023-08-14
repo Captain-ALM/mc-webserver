@@ -37,12 +37,10 @@ deploy: build
 	sudo systemctl stop ${PRODUCT_NAME}
 	sudo cp "${BIN}" /usr/local/bin
 	sudo cp *.go.html cnf
-	sudo cp *.go.yml cnf
 	sudo systemctl start ${PRODUCT_NAME}
 
 d: build
 	sudo systemctl stop ${DNAME}
 	sudo cp "${BIN}" "/usr/local/bin/${DNAME}"
 	sudo cp *.go.html cnf_
-	sudo cp *.go.yml cnf_
 	sudo systemctl start ${DNAME}
