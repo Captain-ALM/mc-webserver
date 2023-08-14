@@ -42,6 +42,7 @@ type Page struct {
 	LastModifiedTemplate time.Time
 	CachedMC             *MC
 	CollectedMCExpiry    time.Time
+	LastModifiedMC       time.Time
 	CacheMCMutex         *sync.Mutex
 }
 
@@ -50,10 +51,16 @@ func (p *Page) GetPath() string {
 }
 
 func (p *Page) GetLastModified() time.Time {
+	var toTest time.Time
 	if p.LastModifiedData.After(p.LastModifiedTemplate) {
-		return p.LastModifiedData
+		toTest = p.LastModifiedData
 	} else {
-		return p.LastModifiedTemplate
+		toTest = p.LastModifiedTemplate
+	}
+	if p.LastModifiedMC.After(toTest) {
+		return p.LastModifiedMC
+	} else {
+		return toTest
 	}
 }
 
@@ -114,7 +121,8 @@ func (p *Page) GetMC(theData *DataYaml, theMarshal *Marshal) MC {
 			theMarshal.Online = false
 			p.CachedMC = nil
 		}
-		p.CollectedMCExpiry = time.Now().Add(theData.MCQueryInterval)
+		p.LastModifiedMC = time.Now()
+		p.CollectedMCExpiry = p.LastModifiedMC.Add(theData.MCQueryInterval)
 	} else {
 		if p.CachedMC == nil {
 			theMC = MC{}
