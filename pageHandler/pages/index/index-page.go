@@ -1,8 +1,6 @@
 package index
 
 import (
-	"golang.captainalm.com/mc-webserver/utils/io"
-	"gopkg.in/yaml.v3"
 	"html/template"
 	"net/url"
 	"os"
@@ -10,6 +8,9 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"golang.captainalm.com/mc-webserver/utils/io"
+	"gopkg.in/yaml.v3"
 )
 
 const templateName = "index.go.html"

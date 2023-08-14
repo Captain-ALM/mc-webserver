@@ -18,10 +18,19 @@ type MC struct {
 	MOTD                   string
 	ActualHost             *string
 	ActualPort             *uint16
-	Favicon                *template.HTML
+	Favicon                *string
 	Edition                *string
 	ModCount               int64
 	Mods                   []string
 	SecureProfilesEnforced *bool
 	PreviewChatEnforced    *bool
+}
+
+func (m MC) GetFaviconSRC() template.HTMLAttr {
+	toReturn := "src=\""
+	if m.Favicon != nil {
+		toReturn += *m.Favicon
+	}
+	toReturn += "\""
+	return template.HTMLAttr(toReturn)
 }

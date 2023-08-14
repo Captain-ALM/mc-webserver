@@ -1,8 +1,6 @@
 package pageHandler
 
 import (
-	"golang.captainalm.com/mc-webserver/conf"
-	"golang.captainalm.com/mc-webserver/pageHandler/utils"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -11,6 +9,9 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"golang.captainalm.com/mc-webserver/conf"
+	"golang.captainalm.com/mc-webserver/pageHandler/utils"
 )
 
 const indexName = "index.go"
@@ -286,6 +287,9 @@ func (ph *PageHandler) GetRegisteredPages() []string {
 }
 
 func (ph *PageHandler) GetCachedPages() []string {
+	if ph.pageContentsCacheRWMutex == nil {
+		return make([]string, 0)
+	}
 	ph.pageContentsCacheRWMutex.RLock()
 	defer ph.pageContentsCacheRWMutex.RUnlock()
 	pages := make([]string, len(ph.PageContentsCache))
@@ -298,6 +302,9 @@ func (ph *PageHandler) GetCachedPages() []string {
 }
 
 func (ph *PageHandler) GetNumberOfCachedPages() int {
+	if ph.pageContentsCacheRWMutex == nil {
+		return 0
+	}
 	ph.pageContentsCacheRWMutex.RLock()
 	defer ph.pageContentsCacheRWMutex.RUnlock()
 	return len(ph.PageContentsCache)

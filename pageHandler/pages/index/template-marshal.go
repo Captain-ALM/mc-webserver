@@ -2,12 +2,13 @@ package index
 
 import (
 	"errors"
-	"github.com/mcstatus-io/mcutil"
-	"github.com/mcstatus-io/mcutil/options"
-	"github.com/mcstatus-io/mcutil/response"
 	"html/template"
 	"strings"
 	"time"
+
+	"github.com/mcstatus-io/mcutil"
+	"github.com/mcstatus-io/mcutil/options"
+	"github.com/mcstatus-io/mcutil/response"
 )
 
 type Marshal struct {
@@ -24,7 +25,7 @@ func (m Marshal) NewMC() (MC, error) {
 	switch strings.ToLower(m.Data.MCType) {
 	case "java":
 		r, err := mcutil.Status(m.Data.MCAddress, m.Data.MCPort, options.JavaStatus{
-			EnableSRV:       m.ExtendedShown && m.Data.AllowDisplayActualAddress,
+			EnableSRV:       m.Data.AllowDisplayActualAddress,
 			Timeout:         m.Data.MCTimeout,
 			ProtocolVersion: m.Data.MCProtocolVersion,
 		})
@@ -32,6 +33,7 @@ func (m Marshal) NewMC() (MC, error) {
 			return MC{}, err
 		}
 		r2, err := mcutil.StatusRaw(m.Data.MCAddress, m.Data.MCPort, options.JavaStatus{
+			EnableSRV:       m.Data.AllowDisplayActualAddress,
 			Timeout:         m.Data.MCTimeout,
 			ProtocolVersion: m.Data.MCProtocolVersion,
 		})
@@ -51,7 +53,7 @@ func (m Marshal) NewMC() (MC, error) {
 			MOTD:                   r.MOTD.Clean,
 			ActualHost:             CollectSRVHost(r.SRVResult),
 			ActualPort:             CollectSRVPort(r.SRVResult),
-			Favicon:                CollectFavicon(r.Favicon),
+			Favicon:                r.Favicon,
 			Edition:                CollectModEdition(r.ModInfo),
 			ModCount:               CollectModCount(r.ModInfo),
 			Mods:                   CollectMods(r.ModInfo),
@@ -60,7 +62,7 @@ func (m Marshal) NewMC() (MC, error) {
 		}, nil
 	case "legacy", "legacyjava", "javalegacy", "legacy java", "java legacy", "legacy_java", "java_legacy":
 		r, err := mcutil.StatusLegacy(m.Data.MCAddress, m.Data.MCPort, options.JavaStatusLegacy{
-			EnableSRV:       m.ExtendedShown && m.Data.AllowDisplayActualAddress,
+			EnableSRV:       m.Data.AllowDisplayActualAddress,
 			Timeout:         m.Data.MCTimeout,
 			ProtocolVersion: m.Data.MCProtocolVersion,
 		})
@@ -89,7 +91,7 @@ func (m Marshal) NewMC() (MC, error) {
 		}, nil
 	case "bedrock":
 		r, err := mcutil.StatusBedrock(m.Data.MCAddress, m.Data.MCPort, options.BedrockStatus{
-			EnableSRV:  m.ExtendedShown && m.Data.AllowDisplayActualAddress,
+			EnableSRV:  m.Data.AllowDisplayActualAddress,
 			Timeout:    m.Data.MCTimeout,
 			ClientGUID: m.Data.MCClientGUID,
 		})
@@ -146,14 +148,6 @@ func CollectSRVPort(srv *response.SRVRecord) *uint16 {
 	return &srv.Port
 }
 
-func CollectFavicon(favicon *string) *template.HTML {
-	if favicon == nil {
-		return nil
-	}
-	toReturn := template.HTML(*favicon)
-	return &toReturn
-}
-
 func CollectModEdition(mod *response.ModInfo) *string {
 	if mod == nil {
 		return nil
@@ -204,8 +198,8 @@ func (m Marshal) CollectIPv4Port(port *uint16) uint16 {
 	return *port
 }
 
-func (m *Marshal) ToggleQuery(option string) string {
-	toReturn := ""
+func (m *Marshal) ToggleQuery(option string) template.HTML {
+	toReturn := "?"
 	if (!m.Dark && option == "dark") || (m.Dark && option != "dark") {
 		toReturn += "dark&"
 	}
@@ -218,5 +212,5 @@ func (m *Marshal) ToggleQuery(option string) string {
 	if (!m.PlayersShown && option == "players") || (m.PlayersShown && option != "players") {
 		toReturn += "players"
 	}
-	return strings.TrimRight(toReturn, "&")
+	return template.HTML(strings.TrimRight(toReturn, "&"))
 }

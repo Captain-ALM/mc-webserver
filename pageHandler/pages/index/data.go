@@ -2,12 +2,14 @@ package index
 
 import (
 	"html/template"
+	"strings"
 	"time"
 )
 
 type DataYaml struct {
 	PageTitle                     string        `yaml:"pageTitle"`
 	ServerDescription             template.HTML `yaml:"serverDescription"`
+	Footer                        string        `yaml:"footer"`
 	MCAddress                     string        `yaml:"mcAddress"`
 	MCPort                        uint16        `yaml:"mcPort"`
 	MCType                        string        `yaml:"mcType"`
@@ -26,4 +28,8 @@ type DataYaml struct {
 	AllowPreviewChatModeDisplay   bool          `yaml:"allowPreviewChatModeDisplay"`
 	AllowDisplayModded            bool          `yaml:"allowDisplayModded"`
 	AllowModListing               bool          `yaml:"allowModListing"`
+}
+
+func (dy DataYaml) GetCleanMCType() string {
+	return strings.Title(dy.MCType)
 }
