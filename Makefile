@@ -38,8 +38,6 @@ deploy: build
 	sudo cp "${BIN}" /usr/local/bin
 	sudo cp *.go.html cnf
 	sudo cp *.go.yml cnf
-	sudo cp *.css cdn
-	sudo cp *.js cdn
 	sudo systemctl start ${PRODUCT_NAME}
 
 d: build
@@ -47,6 +45,4 @@ d: build
 	sudo cp "${BIN}" "/usr/local/bin/${DNAME}"
 	sudo cp *.go.html cnf_
 	sudo cp *.go.yml cnf_
-	sudo cp *.css cdn_
-	sudo cp *.js cdn_
 	sudo systemctl start ${DNAME}
