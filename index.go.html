@@ -174,11 +174,19 @@
         <td>{{ if .Data.AllowModListing }}<a href="{{ .ToggleQuery "mods" }}" title="Toggle Mod List.">{{ end }}{{ .Queried.ModCount }}{{ if .Data.AllowModListing }}</a>{{ end }}</td>
     </tr>
     {{ end }}
-    {{ if and .Data.AllowSecureProfileModeDisplay .Queried.SecureProfilesEnforced }}
+    {{ if .Data.AllowSecureProfileModeDisplay }}
+    {{ if .Queried.SecureProfilesEnforced }}
     <tr>
         <th>Secure Profiles Enforced</th>
         <td>{{ .Queried.SecureProfilesEnforced }}</td>
     </tr>
+    {{ end }}
+    {{ if .Queried.PreventsChatReports }}
+    <tr>
+        <th>Chat Reports Prevented</th>
+        <td>{{ .Queried.PreventsChatReports }}</td>
+    </tr>
+    {{ end }}
     {{ end }}
     {{ if and .Data.AllowPreviewChatModeDisplay .Queried.PreviewChatEnforced }}
     <tr>

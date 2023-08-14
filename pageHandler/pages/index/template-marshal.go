@@ -59,6 +59,7 @@ func (m Marshal) NewMC() (MC, error) {
 			Mods:                   CollectMods(r.ModInfo),
 			SecureProfilesEnforced: CollectSecureProfileEnforcement(r2),
 			PreviewChatEnforced:    CollectPreviewChatEnforcement(r2),
+			PreventsChatReports:    CollectPreventsChatReports(r2),
 		}, nil
 	case "legacy", "legacyjava", "javalegacy", "legacy java", "java legacy", "legacy_java", "java_legacy":
 		r, err := mcutil.StatusLegacy(m.Data.MCAddress, m.Data.MCPort, options.JavaStatusLegacy{
@@ -88,6 +89,7 @@ func (m Marshal) NewMC() (MC, error) {
 			Mods:                   nil,
 			SecureProfilesEnforced: nil,
 			PreviewChatEnforced:    nil,
+			PreventsChatReports:    nil,
 		}, nil
 	case "bedrock":
 		r, err := mcutil.StatusBedrock(m.Data.MCAddress, m.Data.MCPort, options.BedrockStatus{
@@ -117,6 +119,7 @@ func (m Marshal) NewMC() (MC, error) {
 			Mods:                   nil,
 			SecureProfilesEnforced: nil,
 			PreviewChatEnforced:    nil,
+			PreventsChatReports:    nil,
 		}, nil
 	default:
 		return MC{}, errors.New("Invalid MCType")
@@ -184,6 +187,15 @@ func CollectSecureProfileEnforcement(data map[string]interface{}) *bool {
 
 func CollectPreviewChatEnforcement(data map[string]interface{}) *bool {
 	val, ok := data["previewsChat"]
+	if ok {
+		toReturn := val.(bool)
+		return &toReturn
+	}
+	return nil
+}
+
+func CollectPreventsChatReports(data map[string]interface{}) *bool {
+	val, ok := data["preventsChatReports"]
 	if ok {
 		toReturn := val.(bool)
 		return &toReturn

@@ -24,6 +24,7 @@ type MC struct {
 	Mods                   []string
 	SecureProfilesEnforced *bool
 	PreviewChatEnforced    *bool
+	PreventsChatReports    *bool
 }
 
 func (m MC) GetFaviconSRC() template.HTMLAttr {
