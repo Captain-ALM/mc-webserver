@@ -220,9 +220,11 @@
     {{ end }}
     {{ else }}
     {{ range .Queried.Players }}
+	{{ if ne . "Anonymous Player" }}
     <tr>
-        <td>{{ if ne . "Anonymous Player" }}{{ . }}{{ end }}</td>
+        <td>{{ . }}</td>
     </tr>
+	{{ end }}
     {{ end }}
     {{ end }}
     {{ else }}
