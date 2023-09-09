@@ -44,9 +44,9 @@ func NewPageHandler(config conf.ServeYaml) *PageHandler {
 		CacheSettings:            config.CacheSettings,
 	}
 	if config.EnableGoInfoPage {
-		toReturn.PageProviders = GetProviders(config.CacheSettings.EnableTemplateCaching, config.DataStorage, toReturn)
+		toReturn.PageProviders = GetProviders(config.CacheSettings.EnableTemplateCaching, config.GetDataStoragePath(), toReturn, config.GetTemplateStoragePath(), config.PageSettings, config.YmlDataFallback)
 	} else {
-		toReturn.PageProviders = GetProviders(config.CacheSettings.EnableTemplateCaching, config.DataStorage, nil)
+		toReturn.PageProviders = GetProviders(config.CacheSettings.EnableTemplateCaching, config.GetDataStoragePath(), nil, config.GetTemplateStoragePath(), config.PageSettings, config.YmlDataFallback)
 	}
 	return toReturn
 }

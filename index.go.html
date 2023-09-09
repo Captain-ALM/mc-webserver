@@ -108,6 +108,10 @@
     </tr>
     {{ end }}
     {{ end }}
+</table>
+</p>
+<p>
+<table>
     {{ if .Data.AllowDisplayState }}
     <tr>
         <th>Server State</th>
@@ -145,6 +149,10 @@
     </tr>
     {{ end }}
     {{ end }}
+</table>
+</p>
+<p>
+<table>
     {{ if and .Data.AllowPlayerCountDisplay (and .Queried.PlayerCount .Queried.MaxPlayers) }}
     <tr>
         <th>Player Count</th>
@@ -206,26 +214,16 @@
 <p>
 <table>
     <tr>
-        <th>Player List{{ if .Queried.PlayerCount }} ({{ .Queried.PlayerCount }}) {{ end }}</th>
+        <th>Player List{{ if .Queried.PlayerCount }} ({{ len (.Queried.GetPlayers .Data.ShowAnonymousPlayers) }}) {{ end }}</th>
     </tr>
     <tr>
         <td class="centered"><a href="{{ .ToggleQuery "players" }}" title="Collapse Player List.">Collapse Player List</a></td>
     </tr>
     {{ if gt (len (.Queried.GetPlayers .Data.ShowAnonymousPlayers)) 0 }}
-    {{ if .Data.ShowAnonymousPlayers }}
-    {{ range .Queried.Players }}
+    {{ range .Queried.GetPlayers .Data.ShowAnonymousPlayers }}
     <tr>
         <td>{{ . }}</td>
     </tr>
-    {{ end }}
-    {{ else }}
-    {{ range .Queried.Players }}
-	{{ if ne . "Anonymous Player" }}
-    <tr>
-        <td>{{ . }}</td>
-    </tr>
-	{{ end }}
-    {{ end }}
     {{ end }}
     {{ else }}
     <tr>

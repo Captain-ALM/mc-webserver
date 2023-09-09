@@ -9,10 +9,13 @@ import (
 
 type ServeYaml struct {
 	DataStorage      string            `yaml:"dataStorage"`
+	TemplateStorage  string            `yaml:"templateStorage"`
 	Domains          []string          `yaml:"domains"`
 	RangeSupported   bool              `yaml:"rangeSupported"`
 	EnableGoInfoPage bool              `yaml:"enableGoInfoPage"`
 	CacheSettings    CacheSettingsYaml `yaml:"cacheSettings"`
+	PageSettings     []PageYaml        `yaml:"pageSettings"`
+	YmlDataFallback  bool              `yaml:"ymlDataFallback"`
 }
 
 func (sy ServeYaml) GetDomainString() string {
@@ -37,5 +40,22 @@ func (sy ServeYaml) GetDataStoragePath() string {
 		}
 	} else {
 		return sy.DataStorage
+	}
+}
+
+func (sy ServeYaml) GetTemplateStoragePath() string {
+	if sy.TemplateStorage == "" || !filepath.IsAbs(sy.TemplateStorage) {
+		wd, err := os.Getwd()
+		if err != nil {
+			return ""
+		} else {
+			if sy.TemplateStorage == "" {
+				return wd
+			} else {
+				return path.Join(wd, sy.TemplateStorage)
+			}
+		}
+	} else {
+		return sy.TemplateStorage
 	}
 }
